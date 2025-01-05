@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.bartosboth.weatherforecast.navigation.WeatherNavigation
 import com.bartosboth.weatherforecast.ui.theme.WeatherForecastTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,13 +31,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview
 @Composable
 fun WeatherApp() {
     WeatherForecastTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
             Column(verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(innerPadding)) {
+                modifier = Modifier.padding(innerPadding)
+                    .fillMaxSize()) {
                 WeatherNavigation()
             }
         }
