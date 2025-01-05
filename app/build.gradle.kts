@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +9,62 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.serialization)
 }
+
+
+//val properties = Properties()
+//val propertiesFile = rootProject.file("bartosboth.properties")
+//
+//if (propertiesFile.exists()) {
+//    properties.load(propertiesFile.inputStream())
+//} else {
+//    throw FileNotFoundException("Could not find properties file: $propertiesFile")
+//}
+//
+//val apiKey: String? = properties.getProperty("WEATHER_API_KEY")
+//if (apiKey == null) {
+//    throw IllegalArgumentException("API key not found in bartosboth.properties")
+//}
+
+//android {
+//    namespace = "com.bartosboth.weatherforecast"
+//    compileSdk = 35
+//
+//    defaultConfig {
+//        applicationId = "com.bartosboth.weatherforecast"
+//        minSdk = 35
+//        targetSdk = 35
+//        versionCode = 1
+//        versionName = "1.0"
+//
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//    }
+//
+//    buildTypes {
+//        release {
+//            isMinifyEnabled = false
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
+//            buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
+//        }
+//
+//    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
+//    kotlinOptions {
+//        jvmTarget = "11"
+//    }
+//    buildFeatures {
+//        compose = true
+//        buildConfig = true
+//    }
+//    hilt {
+//        enableAggregatingTask = false
+//    }
+//}
 
 android {
     namespace = "com.bartosboth.weatherforecast"
@@ -29,7 +88,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isMinifyEnabled = false
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -39,11 +102,32 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     hilt {
         enableAggregatingTask = false
     }
 }
+
+// Load the API key from bartosboth.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("bartosboth.properties")
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+} else {
+    throw FileNotFoundException("Could not find bartosboth.properties file!")
+}
+
+// Inject into BuildConfig
+android.buildTypes.forEach {
+    it.buildConfigField(
+        "String",
+        "WEATHER_API_KEY",
+        "\"${localProperties.getProperty("WEATHER_API_KEY")}\""
+    )
+}
+
 
 dependencies {
 
