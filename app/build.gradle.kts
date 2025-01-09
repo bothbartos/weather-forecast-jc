@@ -10,62 +10,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-
-//val properties = Properties()
-//val propertiesFile = rootProject.file("bartosboth.properties")
-//
-//if (propertiesFile.exists()) {
-//    properties.load(propertiesFile.inputStream())
-//} else {
-//    throw FileNotFoundException("Could not find properties file: $propertiesFile")
-//}
-//
-//val apiKey: String? = properties.getProperty("WEATHER_API_KEY")
-//if (apiKey == null) {
-//    throw IllegalArgumentException("API key not found in bartosboth.properties")
-//}
-
-//android {
-//    namespace = "com.bartosboth.weatherforecast"
-//    compileSdk = 35
-//
-//    defaultConfig {
-//        applicationId = "com.bartosboth.weatherforecast"
-//        minSdk = 35
-//        targetSdk = 35
-//        versionCode = 1
-//        versionName = "1.0"
-//
-//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//    }
-//
-//    buildTypes {
-//        release {
-//            isMinifyEnabled = false
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//            buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
-//        }
-//
-//    }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_11
-//        targetCompatibility = JavaVersion.VERSION_11
-//    }
-//    kotlinOptions {
-//        jvmTarget = "11"
-//    }
-//    buildFeatures {
-//        compose = true
-//        buildConfig = true
-//    }
-//    hilt {
-//        enableAggregatingTask = false
-//    }
-//}
-
 android {
     namespace = "com.bartosboth.weatherforecast"
     compileSdk = 35
@@ -154,6 +98,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
 
     implementation(libs.androidx.core.ktx)

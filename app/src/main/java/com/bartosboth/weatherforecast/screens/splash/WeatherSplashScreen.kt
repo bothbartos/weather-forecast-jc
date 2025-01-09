@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import androidx.navigation.NavController
 import com.bartosboth.weatherforecast.R
 import com.bartosboth.weatherforecast.navigation.MainScreen
 import kotlinx.coroutines.delay
+import androidx.compose.ui.graphics.ColorFilter
 
 @Composable
 fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -34,6 +36,7 @@ fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modif
         Animatable(0f)
 
     }
+    val imageColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
     LaunchedEffect(key1 = true, block =  {
         scale.animateTo(targetValue = 0.9f,
@@ -43,7 +46,7 @@ fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modif
                         .getInterpolation(it)
                 }))
         delay(2000L)
-        navController.navigate(MainScreen)
+        navController.navigate(MainScreen()) //error is here
     })
 
     Surface(
@@ -65,6 +68,7 @@ fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modif
                 painter = painterResource(id = R.drawable.sun),
                 contentDescription = "Sun icon",
                 contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(imageColor)
             )
             Text(
                 text = "Loading...",
