@@ -6,9 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.bartosboth.weatherforecast.screens.about.AboutScreen
+import com.bartosboth.weatherforecast.screens.favourites.FavouritesScreen
 import com.bartosboth.weatherforecast.screens.main.MainScreen
 import com.bartosboth.weatherforecast.screens.main.MainViewModel
 import com.bartosboth.weatherforecast.screens.search.SearchScreen
+import com.bartosboth.weatherforecast.screens.settings.SettingsScreen
 import com.bartosboth.weatherforecast.screens.splash.WeatherSplashScreen
 
 @Composable
@@ -33,6 +36,15 @@ fun WeatherNavigation() {
                     navController.navigate(MainScreen(city = city))
                 }
             )
+        }
+        composable<FavouritesScreen>{
+            FavouritesScreen(navController = navController)
+        }
+        composable<AboutScreen>{
+            AboutScreen(navController = navController)
+        }
+        composable<SettingsScreen>{
+            SettingsScreen(navController = navController)
         }
     }
 }

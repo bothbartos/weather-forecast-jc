@@ -17,8 +17,6 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi){
             Log.d("TAG", "getWeather: $e")
             return DataOrException(e = e)
         }
-
-        Log.d("API_RESPONSE", response.toString())
         return DataOrException(data = response)
     }
 }

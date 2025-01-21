@@ -3,7 +3,6 @@ package com.bartosboth.weatherforecast.widgets
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.bartosboth.weatherforecast.R
@@ -214,10 +214,12 @@ fun ForecastRow(weather: Forecastday) {
                     .padding(4.dp)
                     .weight(1f),
                 shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+
             ) {
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                     text = weather.day.condition.text,
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center
@@ -233,6 +235,36 @@ fun ForecastRow(weather: Forecastday) {
                 modifier = Modifier.weight(1f),
                 text = "${weather.day.mintemp_c.roundToInt()}°C",
                 style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Card() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(4.dp)
+                .align(Alignment.CenterVertically)
+                .weight(1f),
+            shape = RoundedCornerShape(10.dp),
+
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+
+            ) {
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                text = "Sunny",
+                style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center
             )
         }

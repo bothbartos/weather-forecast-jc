@@ -2,6 +2,7 @@ package com.bartosboth.weatherforecast.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,7 +35,6 @@ import kotlin.math.roundToInt
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: MainViewModel,
     city: String = "Budapest"
@@ -46,8 +46,15 @@ fun MainScreen(
         value = viewModel.getWeatherData(city)
     }.value
 
-    if (weatherData.loading == true) CircularProgressIndicator()
-    else if (weatherData.data != null) MainScaffold(
+    if (weatherData.loading == true) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (weatherData.data != null) MainScaffold(
         weather = weatherData.data!!,
         navController = navController
     )

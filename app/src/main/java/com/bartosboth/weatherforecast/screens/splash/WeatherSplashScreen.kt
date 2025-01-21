@@ -46,7 +46,7 @@ fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modif
                         .getInterpolation(it)
                 }))
         delay(2000L)
-        navController.navigate(MainScreen()) //error is here
+        navController.navigate(MainScreen())
     })
 
     Surface(
