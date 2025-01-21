@@ -80,7 +80,7 @@ fun WeatherStateImage(modifier: Modifier = Modifier, imageUrl: String, imageSize
 }
 
 @Composable
-fun WindPressureRow(weather: Weather) {
+fun WindPressureRow(weather: Weather, isImperial: Boolean) {
     val imageColor =
         if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
     Row(
@@ -107,7 +107,7 @@ fun WindPressureRow(weather: Weather) {
             colorFilter = ColorFilter.tint(imageColor)
         )
         Text(
-            text = "${weather.current.wind_kph} km/h",
+            text = if(isImperial)"${weather.current.wind_mph} MPH" else "${weather.current.wind_kph} km/h",
             style = MaterialTheme.typography.titleMedium
         )
         Image(
@@ -125,7 +125,7 @@ fun WindPressureRow(weather: Weather) {
 
 
 @Composable
-fun ForecastLazyColumn(weather: Weather) {
+fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
     Text(
         text = "3 day forecast",
         style = MaterialTheme.typography.titleMedium,
@@ -178,7 +178,7 @@ fun ForecastLazyColumn(weather: Weather) {
         ) {
             LazyColumn {
                 items(weather.forecast.forecastday.size) { index ->
-                    ForecastRow(weather.forecast.forecastday[index])
+                    ForecastRow(weather.forecast.forecastday[index], isImperial = isImperial)
                 }
             }
         }
@@ -186,7 +186,7 @@ fun ForecastLazyColumn(weather: Weather) {
 }
 
 @Composable
-fun ForecastRow(weather: Forecastday) {
+fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -227,44 +227,14 @@ fun ForecastRow(weather: Forecastday) {
             }
             Text(
                 modifier = Modifier.weight(1f),
-                text = "${weather.day.maxtemp_c.roundToInt()}°C",
+                text = if (isImperial)"${weather.day.maxtemp_f.roundToInt()}°F" else "${weather.day.maxtemp_c.roundToInt()}°C" ,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
             Text(
                 modifier = Modifier.weight(1f),
-                text = "${weather.day.mintemp_c.roundToInt()}°C",
+                text = if(isImperial)"${weather.day.mintemp_c.roundToInt()}°F" else "${weather.day.mintemp_f.roundToInt()}°C",
                 style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun Card() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.CenterVertically)
-                .weight(1f),
-            shape = RoundedCornerShape(10.dp),
-
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-
-            ) {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
-                text = "Sunny",
-                style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center
             )
         }

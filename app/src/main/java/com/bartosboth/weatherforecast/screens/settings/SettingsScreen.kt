@@ -29,7 +29,7 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    var unitToggleChange = settingsViewModel.unitSetting.collectAsState().value
+    var isImperial = settingsViewModel.unitSetting.collectAsState().value
 
     Scaffold(topBar = {
         WeatherAppBar(
@@ -61,10 +61,10 @@ fun SettingsScreen(
                     .padding(5.dp),
                     checked = true,
                     onCheckedChange = {
-                        unitToggleChange = !unitToggleChange
+                        isImperial = !isImperial
                         settingsViewModel.toggleUnitSetting()
                     }) {
-                    if (unitToggleChange) Text("Metric") else Text("Imperial")
+                    if (isImperial) Text("Imperial") else Text("Metric")
                 }
 
 

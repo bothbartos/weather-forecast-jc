@@ -27,7 +27,7 @@ fun WeatherNavigation() {
             val mainScreen: MainScreen = backStackEntry.toRoute()
             val mainViewModel: MainViewModel = hiltViewModel()
 
-            MainScreen(navController =  navController, viewModel = mainViewModel, city = mainScreen.city)
+            MainScreen(navController =  navController, mainViewModel = mainViewModel, city = mainScreen.city)
         }
 
         composable<SearchScreen> {

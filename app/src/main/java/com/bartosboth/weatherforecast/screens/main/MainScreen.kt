@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,19 +32,22 @@ import com.bartosboth.weatherforecast.widgets.WeatherAppBar
 import com.bartosboth.weatherforecast.widgets.WeatherStateImage
 import com.bartosboth.weatherforecast.widgets.WindPressureRow
 import kotlin.math.roundToInt
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.bartosboth.weatherforecast.screens.settings.SettingsViewModel
 
 
 @Composable
 fun MainScreen(
     navController: NavController,
-    viewModel: MainViewModel,
+    mainViewModel: MainViewModel,
+
     city: String = "Budapest"
 ) {
 
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = viewModel.getWeatherData(city)
+        value = mainViewModel.getWeatherData(city)
     }.value
 
     if (weatherData.loading == true) {
@@ -81,6 +85,8 @@ fun MainScaffold(weather: Weather, navController: NavController) {
 
 @Composable
 fun MainContent(data: Weather, modifier: Modifier) {
+    val isImperial: Boolean = hiltViewModel<SettingsViewModel>().unitSetting.collectAsState().value
+
     Column(
         modifier = modifier
             .padding(4.dp)
@@ -108,7 +114,7 @@ fun MainContent(data: Weather, modifier: Modifier) {
             ) {
                 WeatherStateImage(imageUrl = "https:${data.current.condition.icon}")
                 Text(
-                    text = data.current.temp_c.roundToInt().toString() + "°C",
+                    text = if(isImperial) "${data.current.temp_f.roundToInt()}°F" else "${data.current.temp_c.roundToInt()}°C",
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = MaterialTheme.typography.displayMedium.fontWeight,
                     fontStyle = FontStyle.Italic
@@ -120,11 +126,11 @@ fun MainContent(data: Weather, modifier: Modifier) {
                 )
             }
         }
-        WindPressureRow(weather = data)
+        WindPressureRow(weather = data, isImperial = isImperial)
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
         SunriseSunsetRow(weather = data)
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
-        ForecastLazyColumn(weather = data)
+        ForecastLazyColumn(weather = data, isImperial = isImperial)
     }
 }
 
