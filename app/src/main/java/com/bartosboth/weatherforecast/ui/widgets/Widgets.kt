@@ -1,6 +1,7 @@
 package com.bartosboth.weatherforecast.ui.widgets
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,19 +23,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bartosboth.weatherforecast.R
 import com.bartosboth.weatherforecast.data.model.Forecastday
 import com.bartosboth.weatherforecast.data.model.Weather
+import com.bartosboth.weatherforecast.navigation.DetailScreen
 import com.bartosboth.weatherforecast.utils.formatDateToDay
 import kotlin.math.roundToInt
 
 @Composable
-fun SunriseSunsetRow(weather: Weather) {
-    val imageColor =
-        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
+fun SunriseSunsetRow(sunrise: String, sunset: String) {
+    val imageColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
     Row(
         modifier = Modifier
             .padding(12.dp)
@@ -42,7 +45,7 @@ fun SunriseSunsetRow(weather: Weather) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row() {
+        Row {
             Image(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(id = R.drawable.sunrise),
@@ -50,13 +53,13 @@ fun SunriseSunsetRow(weather: Weather) {
                 colorFilter = ColorFilter.tint(imageColor)
             )
             Text(
-                text = weather.forecast.forecastday[0].astro.sunrise,
+                text = sunrise,
                 style = MaterialTheme.typography.titleMedium
             )
         }
-        Row() {
+        Row {
             Text(
-                text = weather.forecast.forecastday[0].astro.sunset,
+                text = sunset,
                 style = MaterialTheme.typography.titleMedium
             )
             Image(
@@ -79,9 +82,13 @@ fun WeatherStateImage(modifier: Modifier = Modifier, imageUrl: String, imageSize
 }
 
 @Composable
-fun WindPressureRow(weather: Weather, isImperial: Boolean) {
-    val imageColor =
-        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
+fun WindPressureRow(
+    humidity: Int,
+    windSpeed: Double,
+    pressure: Int,
+    isImperial: Boolean
+) {
+    val imageColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
     Row(
         modifier = Modifier
             .padding(12.dp)
@@ -96,7 +103,7 @@ fun WindPressureRow(weather: Weather, isImperial: Boolean) {
             colorFilter = ColorFilter.tint(imageColor)
         )
         Text(
-            text = "${weather.current.humidity}%",
+            text = "$humidity%",
             style = MaterialTheme.typography.titleMedium
         )
         Image(
@@ -106,7 +113,7 @@ fun WindPressureRow(weather: Weather, isImperial: Boolean) {
             colorFilter = ColorFilter.tint(imageColor)
         )
         Text(
-            text = if(isImperial)"${weather.current.wind_mph} MPH" else "${weather.current.wind_kph} km/h",
+            text = if(isImperial) "$windSpeed MPH" else "$windSpeed km/h",
             style = MaterialTheme.typography.titleMedium
         )
         Image(
@@ -116,15 +123,16 @@ fun WindPressureRow(weather: Weather, isImperial: Boolean) {
             colorFilter = ColorFilter.tint(imageColor)
         )
         Text(
-            text = "${weather.current.pressure_mb} mb",
+            text = "$pressure mb",
             style = MaterialTheme.typography.titleMedium
         )
     }
 }
 
 
+
 @Composable
-fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
+fun ForecastLazyColumn(weather: Weather, isImperial: Boolean, navController: NavController) {
     Text(
         text = "3 day forecast",
         style = MaterialTheme.typography.titleMedium,
@@ -177,7 +185,9 @@ fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
         ) {
             LazyColumn {
                 items(weather.forecast.forecastday.size) { index ->
-                    ForecastRow(weather.forecast.forecastday[index], isImperial = isImperial)
+                    ForecastRow(weather.forecast.forecastday[index],
+                        isImperial = isImperial,
+                        onItemClicked = { navController.navigate(DetailScreen(index))})
                 }
             }
         }
@@ -185,11 +195,12 @@ fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
 }
 
 @Composable
-fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
+fun ForecastRow(weather: Forecastday, isImperial: Boolean, onItemClicked: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(3.dp)
+            .clickable { onItemClicked() }
     ) {
         Row(
             modifier = Modifier
@@ -216,7 +227,7 @@ fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
 
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
 
-            ) {
+                ) {
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
                     text = weather.day.condition.text,
@@ -237,5 +248,33 @@ fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Composable
+fun WeatherInfoDisplay(
+    imageUrl: String,
+    temperature: String,
+    condition: String,
+    modifier: Modifier = Modifier
+) {
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(2.dp)
+    ) {
+        WeatherStateImage(imageUrl = imageUrl)
+        Text(
+            text = temperature,
+            style = MaterialTheme.typography.displayMedium,
+            fontWeight = MaterialTheme.typography.displayMedium.fontWeight,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = condition,
+            style = MaterialTheme.typography.titleMedium,
+            fontStyle = FontStyle.Italic
+        )
     }
 }
