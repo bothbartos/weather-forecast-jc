@@ -5,8 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bartosboth.weatherforecast.model.Favourite
-import com.bartosboth.weatherforecast.model.Unit
+import com.bartosboth.weatherforecast.data.model.Favourite
+import com.bartosboth.weatherforecast.data.model.Unit
 import kotlinx.coroutines.flow.Flow
 
 @Dao

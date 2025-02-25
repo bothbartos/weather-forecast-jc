@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.bartosboth.weatherforecast.data.WeatherDao
 import com.bartosboth.weatherforecast.data.WeatherDatabase
-import com.bartosboth.weatherforecast.network.WeatherApi
+import com.bartosboth.weatherforecast.data.network.WeatherApi
 import com.bartosboth.weatherforecast.utils.Constants
 import dagger.Module
 import dagger.Provides
