@@ -7,8 +7,10 @@ import com.bartosboth.weatherforecast.data.repository.FavouriteRepository
 import com.bartosboth.weatherforecast.data.model.Unit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,24 +18,22 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(private val repository: FavouriteRepository) : ViewModel() {
 
-    val unitSetting: StateFlow<Boolean> = repository.getUnitSetting()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    private val _unitSetting = MutableStateFlow(false)
+    val unitSetting: StateFlow<Boolean> = _unitSetting.asStateFlow()
 
-    fun toggleUnitSetting() {
+    init {
         viewModelScope.launch {
-            val currentSetting = unitSetting.value
-            Log.d("UNIT", "toggleUnitSetting: ${unitSetting.value}")
-            repository.setUnitSetting(!currentSetting)
+            repository.getUnitSetting().collect { isImperial ->
+                _unitSetting.value = isImperial
+            }
         }
     }
 
-    fun setUnitSetting(isImperial: Boolean) {
+    fun toggleUnitSetting() {
         viewModelScope.launch {
-            repository.setUnitSetting(isImperial)
+            val newSetting = !_unitSetting.value
+            repository.setUnitSetting(newSetting)
+            _unitSetting.value = newSetting
         }
     }
 }

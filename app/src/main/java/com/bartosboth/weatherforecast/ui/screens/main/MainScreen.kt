@@ -14,57 +14,62 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.bartosboth.weatherforecast.data.DataOrException
 import com.bartosboth.weatherforecast.data.model.Weather
 import com.bartosboth.weatherforecast.navigation.SearchScreen
-import com.bartosboth.weatherforecast.utils.formatDate
+import com.bartosboth.weatherforecast.ui.screens.settings.SettingsViewModel
 import com.bartosboth.weatherforecast.ui.widgets.ForecastLazyColumn
 import com.bartosboth.weatherforecast.ui.widgets.SunriseSunsetRow
 import com.bartosboth.weatherforecast.ui.widgets.WeatherAppBar
 import com.bartosboth.weatherforecast.ui.widgets.WeatherStateImage
 import com.bartosboth.weatherforecast.ui.widgets.WindPressureRow
+import com.bartosboth.weatherforecast.utils.formatDate
 import kotlin.math.roundToInt
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.bartosboth.weatherforecast.ui.screens.settings.SettingsViewModel
 
 
 @Composable
 fun MainScreen(
     navController: NavController,
     mainViewModel: MainViewModel,
-
     city: String = "Budapest"
 ) {
+    val weatherData by mainViewModel.weatherData.collectAsState()
 
-    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-    ) {
-        value = mainViewModel.getWeatherData(city)
-    }.value
+    LaunchedEffect(city) {
+        mainViewModel.getWeatherData(city)
+    }
 
-    if (weatherData.loading == true) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
+    when {
+        weatherData.loading == true -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else if (weatherData.data != null) MainScaffold(
-        weather = weatherData.data!!,
-        navController = navController
-    )
-
-
+        weatherData.data != null -> {
+            MainScaffold(
+                weather = weatherData.data!!,
+                navController = navController
+            )
+        }
+        weatherData.e != null -> {
+            Text("Error: ${weatherData.e?.message}")
+        }
+    }
 }
+
 
 @Composable
 fun MainScaffold(weather: Weather, navController: NavController) {
