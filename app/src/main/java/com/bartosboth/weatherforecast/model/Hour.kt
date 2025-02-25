@@ -1,20 +1,12 @@
 package com.bartosboth.weatherforecast.model
 
 data class Hour(
-    val chance_of_rain: Int,
-    val chance_of_snow: Int,
-    val cloud: Int,
     val condition: Condition,
-    val dewpoint_c: Double,
-    val dewpoint_f: Double,
     val feelslike_c: Double,
     val feelslike_f: Double,
     val gust_kph: Double,
     val gust_mph: Double,
-    val heatindex_c: Double,
-    val heatindex_f: Double,
     val humidity: Int,
-    val is_day: Int,
     val precip_in: Double,
     val precip_mm: Double,
     val pressure_in: Double,
@@ -23,7 +15,6 @@ data class Hour(
     val temp_c: Double,
     val temp_f: Double,
     val time: String,
-    val time_epoch: Int,
     val uv: Double,
     val vis_km: Double,
     val vis_miles: Int,

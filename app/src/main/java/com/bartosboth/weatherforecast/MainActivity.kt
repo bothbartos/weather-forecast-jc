@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview
 @Composable
 fun WeatherApp() {
     WeatherForecastTheme {
