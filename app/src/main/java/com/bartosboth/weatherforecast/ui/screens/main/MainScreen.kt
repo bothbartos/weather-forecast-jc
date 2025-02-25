@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -30,7 +29,7 @@ import com.bartosboth.weatherforecast.ui.screens.settings.SettingsViewModel
 import com.bartosboth.weatherforecast.ui.widgets.ForecastLazyColumn
 import com.bartosboth.weatherforecast.ui.widgets.SunriseSunsetRow
 import com.bartosboth.weatherforecast.ui.widgets.WeatherAppBar
-import com.bartosboth.weatherforecast.ui.widgets.WeatherStateImage
+import com.bartosboth.weatherforecast.ui.widgets.WeatherInfoDisplay
 import com.bartosboth.weatherforecast.ui.widgets.WindPressureRow
 import com.bartosboth.weatherforecast.utils.formatDate
 import kotlin.math.roundToInt
@@ -112,28 +111,21 @@ fun MainContent(data: Weather, modifier: Modifier, navController: NavController)
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primary
         ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(2.dp)
-            ) {
-                WeatherStateImage(imageUrl = "https:${data.current.condition.icon}")
-                Text(
-                    text = if(isImperial) "${data.current.temp_f.roundToInt()}°F" else "${data.current.temp_c.roundToInt()}°C",
-                    style = MaterialTheme.typography.displayMedium,
-                    fontWeight = MaterialTheme.typography.displayMedium.fontWeight,
-                    fontStyle = FontStyle.Italic
-                )
-                Text(
-                    text = data.current.condition.text,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontStyle = FontStyle.Italic
-                )
-            }
+            WeatherInfoDisplay(
+                imageUrl = "https:${data.current.condition.icon}",
+                temperature = if (isImperial) "${data.current.temp_f.roundToInt()}°F" else "${data.current.temp_c.roundToInt()}°C",
+                condition = data.current.condition.text
+            )
         }
-        WindPressureRow(weather = data, isImperial = isImperial)
+        WindPressureRow(humidity = data.current.humidity,
+            windSpeed = if(isImperial) data.current.wind_mph else data.current.wind_kph,
+            pressure = data.current.pressure_mb,
+            isImperial = isImperial)
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
-        SunriseSunsetRow(weather = data)
+        SunriseSunsetRow(
+            sunrise = data.forecast.forecastday[0].astro.sunrise,
+            sunset = data.forecast.forecastday[0].astro.sunset
+        )
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
         ForecastLazyColumn(weather = data, isImperial = isImperial, navController = navController)
     }

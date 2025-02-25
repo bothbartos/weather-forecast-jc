@@ -53,11 +53,11 @@ fun WeatherNavigation() {
             val detailScreen: DetailScreen = backStackEntry.toRoute()
             val isImperial = hiltViewModel<SettingsViewModel>().unitSetting.collectAsState().value
 
-            val forecastDays by mainViewModel.forecastDays.collectAsState()
-            val forecastDay = forecastDays.getOrNull(detailScreen.index)
+            val weatherData by mainViewModel.weatherData.collectAsState()
+            val forecastDay = weatherData.data?.forecast?.forecastday?.getOrNull(detailScreen.index)
+
             DetailScreen(
                 navController = navController,
-                index = detailScreen.index,
                 forecastDay = forecastDay,
                 isImperial = isImperial
             )
