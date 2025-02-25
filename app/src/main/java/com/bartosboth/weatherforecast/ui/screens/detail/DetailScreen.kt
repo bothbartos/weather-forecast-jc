@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,12 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bartosboth.weatherforecast.data.model.Forecastday
+import com.bartosboth.weatherforecast.data.model.Hour
 import com.bartosboth.weatherforecast.ui.widgets.SunriseSunsetRow
 import com.bartosboth.weatherforecast.ui.widgets.WeatherAppBar
 import com.bartosboth.weatherforecast.ui.widgets.WeatherInfoDisplay
+import com.bartosboth.weatherforecast.ui.widgets.WeatherStateImage
 import com.bartosboth.weatherforecast.ui.widgets.WindPressureRow
 import kotlin.math.roundToInt
 
@@ -93,7 +99,52 @@ fun DetailContent(modifier: Modifier = Modifier, forecastDay: Forecastday, isImp
             sunset = forecastDay.astro.sunset
         )
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
+        HourlyLazyRow(data = forecastDay.hour, isImperial = isImperial)
     }
 }
 
+@Composable
+fun HourlyCard(hour: Hour, isImperial: Boolean) {
+    Card(modifier = Modifier.padding(5.dp),
+        shape = RoundedCornerShape(3.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(3.dp)) {
+            Text(
+                text = if (isImperial) {
+                    hour.temp_f.roundToInt().toString() + "°F"
+                } else {
+                    hour.temp_c.roundToInt().toString() + "°C"
+                }
+            )
+            WeatherStateImage(
+                imageUrl = "https:${hour.condition.icon}",
+                imageSize = 50
+            )
+            Text(text = hour.time.split(" ")[1])
+        }
+    }
+}
+
+@Composable
+fun HourlyLazyRow(data: List<Hour>, isImperial: Boolean) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
+        shape = RoundedCornerShape(27.dp)
+    ) {
+        Text(
+            text = "Hourly forecast",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        LazyRow() {
+            items(data.size) { index ->
+                HourlyCard(data[index], isImperial = isImperial)
+            }
+        }
+    }
+}
 
