@@ -5,9 +5,13 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +33,8 @@ import com.bartosboth.weatherforecast.R
 import com.bartosboth.weatherforecast.navigation.MainScreen
 import kotlinx.coroutines.delay
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -49,32 +55,40 @@ fun WeatherSplashScreen(navController: NavController, modifier: Modifier = Modif
         navController.navigate(MainScreen())
     })
 
-    Surface(
-        modifier = modifier
-            .padding(15.dp)
-            .size(330.dp)
-            .scale(scale.value),
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        border = BorderStroke(width = 2.dp, color = Color.LightGray)
-    ) {
-        Column(
-            modifier = modifier.padding(1.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    Box(contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+
+        ){
+        Surface(
+            modifier = modifier
+                .size(350.dp)
+                .fillMaxSize()
+                .scale(scale.value),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            border = BorderStroke(width = 2.dp, color = Color.LightGray),
         ) {
-            Image(
-                modifier = Modifier.size(95.dp),
-                painter = painterResource(id = R.drawable.sun),
-                contentDescription = "Sun icon",
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(imageColor)
-            )
-            Text(
-                text = "Loading...",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            Column(
+                modifier = modifier.padding(1.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(95.dp),
+                    painter = painterResource(id = R.drawable.sun),
+                    contentDescription = "Sun icon",
+                    contentScale = ContentScale.Fit,
+                    colorFilter = ColorFilter.tint(imageColor)
+                )
+                Text(
+                    text = "Loading...",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
         }
     }
 }
+
+
