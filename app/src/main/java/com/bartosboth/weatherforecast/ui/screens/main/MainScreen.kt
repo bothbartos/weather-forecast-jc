@@ -84,12 +84,12 @@ fun MainScaffold(weather: Weather, navController: NavController) {
             navController.popBackStack()
         }
     }) { innerPadding ->
-        MainContent(data = weather, modifier = Modifier.padding(innerPadding))
+        MainContent(data = weather, modifier = Modifier.padding(innerPadding), navController = navController)
     }
 }
 
 @Composable
-fun MainContent(data: Weather, modifier: Modifier) {
+fun MainContent(data: Weather, modifier: Modifier, navController: NavController) {
     val isImperial: Boolean = hiltViewModel<SettingsViewModel>().unitSetting.collectAsState().value
 
     Column(
@@ -135,7 +135,6 @@ fun MainContent(data: Weather, modifier: Modifier) {
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
         SunriseSunsetRow(weather = data)
         HorizontalDivider(thickness = 2.dp, color = Color.Gray)
-        ForecastLazyColumn(weather = data, isImperial = isImperial)
+        ForecastLazyColumn(weather = data, isImperial = isImperial, navController = navController)
     }
 }
-

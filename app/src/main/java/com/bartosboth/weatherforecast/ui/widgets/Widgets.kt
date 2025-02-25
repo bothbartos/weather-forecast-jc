@@ -1,6 +1,7 @@
 package com.bartosboth.weatherforecast.ui.widgets
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +25,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.bartosboth.weatherforecast.R
 import com.bartosboth.weatherforecast.data.model.Forecastday
 import com.bartosboth.weatherforecast.data.model.Weather
+import com.bartosboth.weatherforecast.navigation.DetailScreen
 import com.bartosboth.weatherforecast.utils.formatDateToDay
 import kotlin.math.roundToInt
 
@@ -124,7 +127,7 @@ fun WindPressureRow(weather: Weather, isImperial: Boolean) {
 
 
 @Composable
-fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
+fun ForecastLazyColumn(weather: Weather, isImperial: Boolean, navController: NavController) {
     Text(
         text = "3 day forecast",
         style = MaterialTheme.typography.titleMedium,
@@ -177,7 +180,9 @@ fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
         ) {
             LazyColumn {
                 items(weather.forecast.forecastday.size) { index ->
-                    ForecastRow(weather.forecast.forecastday[index], isImperial = isImperial)
+                    ForecastRow(weather.forecast.forecastday[index],
+                        isImperial = isImperial,
+                        onItemClicked = { navController.navigate(DetailScreen(index))})
                 }
             }
         }
@@ -185,11 +190,12 @@ fun ForecastLazyColumn(weather: Weather, isImperial: Boolean) {
 }
 
 @Composable
-fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
+fun ForecastRow(weather: Forecastday, isImperial: Boolean, onItemClicked: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(3.dp)
+            .clickable { onItemClicked() }
     ) {
         Row(
             modifier = Modifier
@@ -216,7 +222,7 @@ fun ForecastRow(weather: Forecastday, isImperial: Boolean) {
 
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
 
-            ) {
+                ) {
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
                     text = weather.day.condition.text,
