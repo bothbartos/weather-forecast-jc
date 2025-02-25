@@ -13,9 +13,9 @@ class FavouriteRepository @Inject constructor(private val weatherDao: WeatherDao
     //Favourite
 
     fun getFavourites(): Flow<List<Favourite>> = weatherDao.getFavourites()
-    suspend fun getFavouriteByCity(city: String): Favourite = weatherDao.getFavouriteByCity(city)
+
     suspend fun insertFavourite(favourite: Favourite) = weatherDao.insertFavourite(favourite)
-    suspend fun updateFavourite(favourite: Favourite) = weatherDao.updateFavourite(favourite)
+
     suspend fun deleteFavourite(favourite: Favourite) = weatherDao.deleteFavourite(favourite)
 
     //Unit
