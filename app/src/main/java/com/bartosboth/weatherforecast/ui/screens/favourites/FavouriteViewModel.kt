@@ -1,6 +1,5 @@
 package com.bartosboth.weatherforecast.ui.screens.favourites
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bartosboth.weatherforecast.data.model.Favourite
@@ -21,15 +20,11 @@ class FavouriteViewModel @Inject constructor(
     val favouriteList = _favouriteList.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.getFavourites().distinctUntilChanged()
                 .collect { listOfFavourites ->
-                    if (listOfFavourites.isEmpty()) {
-                        Log.d("FVM", "FavViewModel: EmptyList")
-                        _favouriteList.value = emptyList()
-                    } else {
-                        _favouriteList.value = listOfFavourites
-                        Log.d("FVML", "$listOfFavourites ")
+                    _favouriteList.value = listOfFavourites.ifEmpty {
+                        emptyList()
                     }
                 }
         }
