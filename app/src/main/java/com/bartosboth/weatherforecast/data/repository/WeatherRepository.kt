@@ -14,9 +14,8 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi){
             weatherApi.getWeather(query = city)
 
         }catch (e: Exception){
-            Log.d("TAG", "getWeather: $e")
-            return DataOrException(e = e)
+            return DataOrException(e = e, loading = false)
         }
-        return DataOrException(data = response)
+        return DataOrException(data = response, loading = false)
     }
 }

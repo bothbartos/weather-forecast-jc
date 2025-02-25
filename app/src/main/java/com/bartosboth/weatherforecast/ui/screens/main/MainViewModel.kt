@@ -26,7 +26,12 @@ class MainViewModel @Inject constructor(
 
     fun getWeatherData(city: String) {
         viewModelScope.launch {
-            _weatherData.value = repository.getWeather(city)
+            _weatherData.value = DataOrException(loading = true)
+            try {
+                _weatherData.value = repository.getWeather(city)
+            } catch (e: Exception) {
+                _weatherData.value = DataOrException(e = e, loading = false)
+            }
             _weatherData.value.data?.let { weather ->
                 _forecastDays.value = weather.forecast.forecastday
             }

@@ -31,7 +31,7 @@ class SettingsViewModel @Inject constructor(private val repository: FavouriteRep
 
     fun toggleUnitSetting() {
         viewModelScope.launch {
-            val newSetting = !_unitSetting.value
+            val newSetting = !unitSetting.value
             repository.setUnitSetting(newSetting)
             _unitSetting.value = newSetting
         }
