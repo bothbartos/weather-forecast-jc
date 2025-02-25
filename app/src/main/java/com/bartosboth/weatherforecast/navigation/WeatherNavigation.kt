@@ -6,13 +6,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.bartosboth.weatherforecast.screens.about.AboutScreen
-import com.bartosboth.weatherforecast.screens.favourites.FavouritesScreen
-import com.bartosboth.weatherforecast.screens.main.MainScreen
-import com.bartosboth.weatherforecast.screens.main.MainViewModel
-import com.bartosboth.weatherforecast.screens.search.SearchScreen
-import com.bartosboth.weatherforecast.screens.settings.SettingsScreen
-import com.bartosboth.weatherforecast.screens.splash.WeatherSplashScreen
+import com.bartosboth.weatherforecast.ui.screens.about.AboutScreen
+import com.bartosboth.weatherforecast.ui.screens.favourites.FavouritesScreen
+import com.bartosboth.weatherforecast.ui.screens.main.MainScreen
+import com.bartosboth.weatherforecast.ui.screens.main.MainViewModel
+import com.bartosboth.weatherforecast.ui.screens.search.SearchScreen
+import com.bartosboth.weatherforecast.ui.screens.settings.SettingsScreen
+import com.bartosboth.weatherforecast.ui.screens.splash.WeatherSplashScreen
 
 @Composable
 fun WeatherNavigation() {
