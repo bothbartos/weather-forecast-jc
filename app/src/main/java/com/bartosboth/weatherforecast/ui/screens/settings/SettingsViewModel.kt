@@ -22,11 +22,7 @@ class SettingsViewModel @Inject constructor(private val repository: FavouriteRep
     val unitSetting: StateFlow<Boolean> = _unitSetting.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            repository.getUnitSetting().collect { isImperial ->
-                _unitSetting.value = isImperial
-            }
-        }
+        getUnitSetting()
     }
 
     fun toggleUnitSetting() {
@@ -34,6 +30,12 @@ class SettingsViewModel @Inject constructor(private val repository: FavouriteRep
             val newSetting = !unitSetting.value
             repository.setUnitSetting(newSetting)
             _unitSetting.value = newSetting
+        }
+    }
+
+    fun getUnitSetting()= viewModelScope.launch {
+        repository.getUnitSetting().collect { isImperial ->
+            _unitSetting.value = isImperial
         }
     }
 }
