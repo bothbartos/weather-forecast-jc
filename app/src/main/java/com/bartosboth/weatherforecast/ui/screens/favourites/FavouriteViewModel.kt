@@ -6,6 +6,7 @@ import com.bartosboth.weatherforecast.data.model.Favourite
 import com.bartosboth.weatherforecast.data.repository.FavouriteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -20,18 +21,19 @@ class FavouriteViewModel @Inject constructor(
     val favouriteList = _favouriteList.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            repository.getFavourites().distinctUntilChanged()
-                .collect { listOfFavourites ->
-                    _favouriteList.value = listOfFavourites.ifEmpty {
-                        emptyList()
-                    }
-                }
-        }
+        getFavourites()
     }
 
     fun insertFavourite(favourite: Favourite) =
         viewModelScope.launch { repository.insertFavourite(favourite) }
     fun deleteFavourite(favourite: Favourite) =
         viewModelScope.launch { repository.deleteFavourite(favourite) }
+    fun getFavourites() =  viewModelScope.launch {
+        repository.getFavourites().distinctUntilChanged()
+            .collect { listOfFavourites ->
+                _favouriteList.value = listOfFavourites.ifEmpty {
+                    emptyList()
+                }
+            }
+    }
 }
