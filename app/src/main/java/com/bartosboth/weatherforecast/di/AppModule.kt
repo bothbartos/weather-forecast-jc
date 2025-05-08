@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+object AppModule {
     @Provides
     @Singleton
     fun provideWeatherDao(weatherDatabase: WeatherDatabase): WeatherDao =
@@ -29,10 +29,9 @@ class AppModule {
         Room.databaseBuilder(
             context,
             WeatherDatabase::class.java,
-        "weather_database"
+            "weather_database"
         ).fallbackToDestructiveMigration()
             .build()
-
 
 
     @Provides
