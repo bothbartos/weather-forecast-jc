@@ -48,6 +48,11 @@ android {
         compose = true
         buildConfig = true
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
     hilt {
         enableAggregatingTask = false
     }
@@ -115,17 +120,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    //Mockito
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-
-    //Coroutines test
-    testImplementation(libs.kotlinx.coroutines.test)
-
-
-    androidTestImplementation(libs.mockito.core)
-    androidTestImplementation(libs.mockito.kotlin)
-
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Kotest
+    testImplementation(libs.bundles.kotest)
 }

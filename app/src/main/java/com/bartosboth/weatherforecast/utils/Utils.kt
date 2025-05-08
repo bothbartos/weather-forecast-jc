@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme
 import java.text.SimpleDateFormat
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @SuppressLint("SimpleDateFormat")
 fun formatDate(date: String): String {
@@ -22,3 +24,4 @@ fun formatDateToDay(date: String): String {
     val dateObj = inputFormat.parse(date)
     return outputFormat.format(dateObj!!)
 }
+
